@@ -14,6 +14,7 @@
 #[macro_use]
 mod quote;
 mod concat_idents;
+mod convert;
 mod export;
 mod helpers;
 mod kunit;
@@ -424,4 +425,32 @@ pub fn paste(input: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn kunit_tests(attr: TokenStream, ts: TokenStream) -> TokenStream {
     kunit::kunit_tests(attr, ts)
+}
+
+/// A derive macro for generating an impl of the trait [`FromPrimitive`].
+///
+/// 1. overflow issue
+/// 2. only supports...
+///
+/// # Examples
+///
+/// ```rust
+/// use kernel::convert::FromPrimitive;
+/// use kernel::macros::FromPrimitive;
+///
+/// #[derive(Default, FromPrimitive)]
+/// #[repr(u8)]
+/// enum Foo {
+///     #[default]
+///     A,
+///     B = 0x17,
+/// }
+///
+/// assert_eq!(Foo::from_u8(0), Some(Foo::A));
+/// assert_eq!(Foo::from_u8(0x17), Some(Foo::B));
+/// assert_eq!(Foo::from_u8(0x19), None);
+/// ```
+#[proc_macro_derive(FromPrimitive)]
+pub fn derive_from_primitive(input: TokenStream) -> TokenStream {
+    convert::derive(input)
 }
