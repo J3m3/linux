@@ -30,6 +30,10 @@ pub(crate) fn derive_into(input: DeriveInput) -> syn::Result<TokenStream> {
     derive(DeriveTarget::Into, input)
 }
 
+pub(crate) fn derive_try_from(input: DeriveInput) -> syn::Result<TokenStream> {
+    derive(DeriveTarget::TryFrom, input)
+}
+
 fn derive(target: DeriveTarget, input: DeriveInput) -> syn::Result<TokenStream> {
     let mut errors: Option<syn::Error> = None;
     let mut combine_error = |err| match errors.as_mut() {
@@ -120,18 +124,21 @@ fn derive(target: DeriveTarget, input: DeriveInput) -> syn::Result<TokenStream> 
 #[derive(Clone, Copy, Debug)]
 enum DeriveTarget {
     Into,
+    TryFrom,
 }
 
 impl DeriveTarget {
     fn get_trait_name(&self) -> &'static str {
         match self {
             Self::Into => "Into",
+            Self::TryFrom => "TryFrom",
         }
     }
 
     fn get_helper_name(&self) -> &'static str {
         match self {
             Self::Into => "into",
+            Self::TryFrom => "try_from",
         }
     }
 }
@@ -192,6 +199,12 @@ fn derive_for_enum(
                 .map(|ty| impl_into(enum_ident, variants, &qualified_repr_ty, ty));
             ::quote::quote! { #(#impls)* }
         }
+        DeriveTarget::TryFrom => {
+            let impls = target_tys
+                .iter()
+                .map(|ty| impl_try_from(enum_ident, variants, &qualified_repr_ty, ty));
+            ::quote::quote! { #(#impls)* }
+        }
     };
 
     fn impl_into(
@@ -226,6 +239,54 @@ fn derive_for_enum(
                     #overflow_assertion
 
                     #cast
+                }
+            }
+        }
+    }
+
+    fn impl_try_from(
+        enum_ident: &Ident,
+        variants: &[Ident],
+        repr_ty: &syn::Path,
+        input_ty: &ValidTy,
+    ) -> TokenStream {
+        let param = Ident::new("value", Span::call_site());
+
+        let overflow_assertion = emit_overflow_assert(enum_ident, variants, repr_ty, input_ty);
+        let emit_cast = |variant| {
+            let variant = ::quote::quote! { #enum_ident::#variant };
+            match input_ty {
+                ValidTy::Bounded(inner) => {
+                    let base_ty = inner.emit_qualified_base_ty();
+                    let expr = parse_quote! { #variant as #base_ty };
+                    inner.emit_new(&expr)
+                }
+                ValidTy::Primitive(ident) if ident == "bool" => {
+                    ::quote::quote! { ((#variant as #repr_ty) == 1) }
+                }
+                qualified @ ValidTy::Primitive(_) => ::quote::quote! { #variant as #qualified },
+            }
+        };
+
+        let clauses = variants.iter().map(|variant| {
+            let cast = emit_cast(variant);
+            ::quote::quote! {
+                if #param == #cast {
+                    ::core::result::Result::Ok(#enum_ident::#variant)
+                } else
+            }
+        });
+
+        ::quote::quote! {
+            #[automatically_derived]
+            impl ::core::convert::TryFrom<#input_ty> for #enum_ident {
+                type Error = ::kernel::prelude::Error;
+                fn try_from(#param: #input_ty) -> Result<#enum_ident, Self::Error> {
+                    #overflow_assertion
+
+                    #(#clauses)* {
+                        ::core::result::Result::Err(::kernel::prelude::EINVAL)
+                    }
                 }
             }
         }
@@ -380,6 +441,14 @@ impl Bounded {
         let qualified_name: syn::Path = parse_str(Self::QUALIFIED_NAME).expect("valid path");
         ::quote::quote! {
             #qualified_name::<#base_ty, #bits>::from_expr(#expr)
+        }
+    }
+
+    fn emit_new(&self, expr: &Expr) -> TokenStream {
+        let Self { base_ty, bits, .. } = self;
+        let qualified_name: syn::Path = parse_str(Self::QUALIFIED_NAME).expect("valid path");
+        ::quote::quote! {
+            #qualified_name::<#base_ty, #bits>::new::<{ #expr }>()
         }
     }
 
