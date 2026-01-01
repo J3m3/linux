@@ -19,15 +19,7 @@ def args_crates_cfgs(cfgs):
 
     return crates_cfgs
 
-def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
-    # Generate the configuration list.
-    cfg = []
-    with open(objtree / "include" / "generated" / "rustc_cfg") as fd:
-        for line in fd:
-            line = line.replace("--cfg=", "")
-            line = line.replace("\n", "")
-            cfg.append(line)
-
+def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs, kernel_cfg_group):
     # Now fill the crates list -- dependencies need to come first.
     #
     # Avoid O(n^2) iterations by keeping a map of indexes.
@@ -35,7 +27,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
     crates_indexes = {}
     crates_cfgs = args_crates_cfgs(cfgs)
 
-    def append_crate(display_name, root_module, deps, cfg=[], crate_attrs=[], is_workspace_member=True, is_proc_macro=False, edition="2021"):
+    def append_crate(display_name, root_module, deps, cfg=[], cfg_groups=[], crate_attrs=[], is_workspace_member=True, is_proc_macro=False, edition="2021"):
         crate = {
             "display_name": display_name,
             "root_module": str(root_module),
@@ -48,6 +40,8 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
                 "RUST_MODFILE": "This is only for rust-analyzer"
             }
         }
+        if len(cfg_groups) > 0:
+            crate["cfg_groups"] = cfg_groups
         if len(crate_attrs) > 0:
             crate["crate_attrs"] = crate_attrs
         if is_proc_macro:
@@ -134,7 +128,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
             display_name,
             srctree / "rust"/ display_name / "lib.rs",
             deps,
-            cfg=cfg,
+            cfg_groups=[kernel_cfg_group],
             crate_attrs=crate_attrs,
         )
         crates[-1]["env"]["OBJTREE"] = str(objtree.resolve(True))
@@ -189,7 +183,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
                 name,
                 path,
                 ["kernel"],
-                cfg=cfg,
+                cfg_groups=[kernel_cfg_group],
                 crate_attrs=["no_std"],
             )
 
@@ -214,10 +208,22 @@ def main():
     # Making sure that the `sysroot` and `sysroot_src` belong to the same toolchain.
     assert args.sysroot in args.sysroot_src.parents
 
+    # Generate the configuration list.
+    cfg = []
+    with open(args.objtree / "include" / "generated" / "rustc_cfg") as fd:
+        for line in fd:
+            line = line.replace("--cfg=", "")
+            line = line.replace("\n", "")
+            cfg.append(line)
+    kernel_cfg_group = "kernel"
+
     rust_project = {
-        "crates": generate_crates(args.srctree, args.objtree, args.sysroot_src, args.exttree, args.cfgs),
+        "crates": generate_crates(args.srctree, args.objtree, args.sysroot_src, args.exttree, args.cfgs, kernel_cfg_group),
         "sysroot": str(args.sysroot),
-        "sysroot_src": str(args.sysroot_src)
+        "sysroot_src": str(args.sysroot_src),
+        "cfg_groups": {
+            kernel_cfg_group: cfg,
+        },
     }
 
     json.dump(rust_project, sys.stdout, sort_keys=True, indent=4)
