@@ -23,7 +23,9 @@ use syn::{
     Fields,
     Ident,
     LitInt,
-    Token, //
+    Token,
+    Type,
+    TypePath, //
 };
 
 pub(crate) fn derive_into(input: DeriveInput) -> syn::Result<TokenStream> {
@@ -56,14 +58,16 @@ fn derive(target: DeriveTarget, input: DeriveInput) -> syn::Result<TokenStream> 
                  `#[derive({})]` can only be applied to a unit-only enum",
                 target.get_trait_name()
             );
+            // TODO: why not combine?
             return Err(syn::Error::new(data.struct_token.span(), msg));
         }
         Data::Union(data) => {
             let msg = format!(
                 "expected `enum`, found `union`; \
-                 `#[derive({})]` can only be applied to a unit-only enum",
+                `#[derive({})]` can only be applied to a unit-only enum",
                 target.get_trait_name()
             );
+            // TODO: why not combine?
             return Err(syn::Error::new(data.union_token.span(), msg));
         }
     };
@@ -350,6 +354,8 @@ fn derive_for_enum(
     }
 }
 
+struct RawInput(Type);
+
 enum ValidTy {
     Bounded(Bounded),
     Primitive(Ident),
@@ -386,10 +392,12 @@ impl ValidTy {
 
 impl Parse for ValidTy {
     fn parse(input: ParseStream<'_>) -> syn::Result<Self> {
-        if input.peek(Ident) && input.peek2(Token![<]) {
-            return Ok(ValidTy::Bounded(input.parse()?));
+        // TODO: maybe use syn::GenericParam::Type;
+        if input.peek(Type) && input.peek2(Token![<]) {
+            return Ok(Self::Bounded(input.parse()?));
         }
-        Ok(ValidTy::Primitive(input.parse()?))
+        let ident = input.parse::<TypePath>()?.path.require_ident()?.clone();
+        Ok(Self::Primitive(ident))
     }
 }
 
@@ -474,9 +482,9 @@ impl Bounded {
 impl Parse for Bounded {
     fn parse(input: ParseStream<'_>) -> syn::Result<Self> {
         Ok(Self {
-            name: input.parse()?,
+            name: input.parse::<TypePath>()?.path.require_ident()?.clone(),
             open_angle: input.parse()?,
-            base_ty: input.parse()?,
+            base_ty: input.parse::<TypePath>()?.path.require_ident()?.clone(),
             comma: input.parse()?,
             bits: input.parse()?,
             close_angle: input.parse()?,

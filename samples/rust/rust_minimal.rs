@@ -2,6 +2,7 @@
 
 //! Rust minimal sample.
 
+use kernel::macros::{Into, TryFrom};
 use kernel::prelude::*;
 
 module! {
@@ -18,6 +19,15 @@ module! {
     },
 }
 
+#[derive(Debug, Into, TryFrom)]
+#[try_from(u8)]
+#[into(u8)]
+#[repr(isize)]
+enum E {
+    A,
+    B,
+}
+
 struct RustMinimal {
     numbers: KVec<i32>,
 }
@@ -30,6 +40,12 @@ impl kernel::Module for RustMinimal {
             "test_parameter: {}\n",
             *module_parameters::test_parameter.value()
         );
+
+        // let r = unsafe { kernel::bindings::get_random_u8() };
+        // let e = E::try_from(r)?;
+        // build_assert!((e as isize) < 2);
+
+        // let a = isize::from(E::A);
 
         let mut numbers = KVec::new();
         numbers.push(72, GFP_KERNEL)?;
