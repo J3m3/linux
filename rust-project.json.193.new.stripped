@@ -1,0 +1,915 @@
+{
+    "crates": [
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [],
+            "display_name": "compiler_builtins",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/compiler_builtins.rs"
+        },
+        {
+            "cfg": [
+                "feature=\"proc-macro\"",
+                "wrap_proc_macro"
+            ],
+            "crate_attrs": [],
+            "deps": [],
+            "display_name": "proc_macro2",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/proc-macro2/lib.rs"
+        },
+        {
+            "cfg": [
+                "feature=\"proc-macro\""
+            ],
+            "crate_attrs": [],
+            "deps": [
+                {
+                    "crate": 1,
+                    "name": "proc_macro2"
+                }
+            ],
+            "display_name": "quote",
+            "edition": "2018",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/quote/lib.rs"
+        },
+        {
+            "cfg": [
+                "feature=\"clone-impls\"",
+                "feature=\"derive\"",
+                "feature=\"full\"",
+                "feature=\"parsing\"",
+                "feature=\"printing\"",
+                "feature=\"proc-macro\"",
+                "feature=\"visit-mut\""
+            ],
+            "crate_attrs": [],
+            "deps": [
+                {
+                    "crate": 1,
+                    "name": "proc_macro2"
+                },
+                {
+                    "crate": 2,
+                    "name": "quote"
+                }
+            ],
+            "display_name": "syn",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/syn/lib.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [
+                {
+                    "crate": 1,
+                    "name": "proc_macro2"
+                },
+                {
+                    "crate": 2,
+                    "name": "quote"
+                },
+                {
+                    "crate": 3,
+                    "name": "syn"
+                }
+            ],
+            "display_name": "macros",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_proc_macro": true,
+            "is_workspace_member": true,
+            "proc_macro_dylib_path": "/home/ssiic/w/personal/rfl/rust/libmacros.so",
+            "root_module": "/home/ssiic/w/personal/rfl/rust/macros/lib.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [
+                {
+                    "crate": 0,
+                    "name": "compiler_builtins"
+                }
+            ],
+            "display_name": "build_error",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/build_error.rs"
+        },
+        {
+            "cfg": [
+                "kernel"
+            ],
+            "crate_attrs": [],
+            "deps": [
+                {
+                    "crate": 1,
+                    "name": "proc_macro2"
+                },
+                {
+                    "crate": 2,
+                    "name": "quote"
+                },
+                {
+                    "crate": 3,
+                    "name": "syn"
+                }
+            ],
+            "display_name": "pin_init_internal",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_proc_macro": true,
+            "is_workspace_member": true,
+            "proc_macro_dylib_path": "/home/ssiic/w/personal/rfl/rust/libpin_init_internal.so",
+            "root_module": "/home/ssiic/w/personal/rfl/rust/pin-init/internal/src/lib.rs"
+        },
+        {
+            "cfg": [
+                "kernel"
+            ],
+            "crate_attrs": [],
+            "deps": [
+                {
+                    "crate": 0,
+                    "name": "compiler_builtins"
+                },
+                {
+                    "crate": 6,
+                    "name": "pin_init_internal"
+                },
+                {
+                    "crate": 4,
+                    "name": "macros"
+                }
+            ],
+            "display_name": "pin_init",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/pin-init/src/lib.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [
+                {
+                    "crate": 0,
+                    "name": "compiler_builtins"
+                }
+            ],
+            "display_name": "ffi",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/ffi.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [
+                null,
+                {
+                    "crate": 8,
+                    "name": "ffi"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "bindings",
+            "edition": "2021",
+            "env": {
+                "OBJTREE": "/home/ssiic/w/personal/rfl",
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/bindings/lib.rs",
+            "source": {
+                "exclude_dirs": [],
+                "include_dirs": [
+                    "/home/ssiic/w/personal/rfl/rust/bindings",
+                    "/home/ssiic/w/personal/rfl/rust"
+                ]
+            }
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [
+                null,
+                {
+                    "crate": 8,
+                    "name": "ffi"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "uapi",
+            "edition": "2021",
+            "env": {
+                "OBJTREE": "/home/ssiic/w/personal/rfl",
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/uapi/lib.rs",
+            "source": {
+                "exclude_dirs": [],
+                "include_dirs": [
+                    "/home/ssiic/w/personal/rfl/rust/uapi",
+                    "/home/ssiic/w/personal/rfl/rust"
+                ]
+            }
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [
+                null,
+                {
+                    "crate": 4,
+                    "name": "macros"
+                },
+                {
+                    "crate": 5,
+                    "name": "build_error"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                },
+                {
+                    "crate": 8,
+                    "name": "ffi"
+                },
+                {
+                    "crate": 9,
+                    "name": "bindings"
+                },
+                {
+                    "crate": 10,
+                    "name": "uapi"
+                }
+            ],
+            "display_name": "kernel",
+            "edition": "2021",
+            "env": {
+                "OBJTREE": "/home/ssiic/w/personal/rfl",
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/rust/kernel/lib.rs",
+            "source": {
+                "exclude_dirs": [],
+                "include_dirs": [
+                    "/home/ssiic/w/personal/rfl/rust/kernel",
+                    "/home/ssiic/w/personal/rfl/rust"
+                ]
+            }
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [],
+            "display_name": "generate_rust_target",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/scripts/generate_rust_target.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [],
+            "display_name": "rustdoc_test_builder",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/scripts/rustdoc_test_builder.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [],
+            "deps": [],
+            "display_name": "rustdoc_test_gen",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/scripts/rustdoc_test_gen.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_minimal",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_minimal.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_configfs",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_configfs.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_debugfs",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_debugfs.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_debugfs_scoped",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_debugfs_scoped.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_dma",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_dma.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_driver_auxiliary",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_driver_auxiliary.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_driver_faux",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_driver_faux.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_driver_i2c",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_driver_i2c.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_driver_pci",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_driver_pci.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_driver_platform",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_driver_platform.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_driver_usb",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_driver_usb.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_i2c_client",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_i2c_client.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_misc_device",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_misc_device.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_print_main",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_print_main.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_soc",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/samples/rust/rust_soc.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rcpufreq_dt",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/cpufreq/rcpufreq_dt.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "pwm_th1520",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/pwm/pwm_th1520.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "ax88796b_rust",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/net/phy/ax88796b_rust.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "qt2025",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/net/phy/qt2025.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "drm_panic_qr",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/gpu/drm/drm_panic_qr.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "nova_core",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/gpu/nova-core/nova_core.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "nova",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/gpu/drm/nova/nova.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "tyr",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/gpu/drm/tyr/tyr.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rnull",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/block/rnull/rnull.rs"
+        },
+        {
+            "cfg": [],
+            "crate_attrs": [
+                "no_std"
+            ],
+            "deps": [
+                {
+                    "crate": 11,
+                    "name": "kernel"
+                },
+                {
+                    "crate": 7,
+                    "name": "pin_init"
+                }
+            ],
+            "display_name": "rust_binder_main",
+            "edition": "2021",
+            "env": {
+                "RUST_MODFILE": "This is only for rust-analyzer"
+            },
+            "is_workspace_member": true,
+            "root_module": "/home/ssiic/w/personal/rfl/drivers/android/binder/rust_binder_main.rs"
+        }
+    ],
+    "sysroot": "/nix/store/xb0rh881vw1apxsyg97iyy5dpvbbhy7z-rust-default-1.78.0",
+    "sysroot_src": "/nix/store/xb0rh881vw1apxsyg97iyy5dpvbbhy7z-rust-default-1.78.0/lib/rustlib/src/rust/library"
+}

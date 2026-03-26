@@ -54,6 +54,43 @@ class CrateWithGenerated(Crate):
     source: Source
 
 
+@dataclass(frozen=True)
+class RaVersionCtx:
+    manual_sysroot_crates: bool
+    use_crate_attrs: bool
+
+
+Version = tuple[int, int, int]
+
+
+@enum.unique
+class RaVersionInfo(enum.Enum):
+    """
+    Represents rust-analyzer compatibility baselines. Concrete versions are mapped to the most
+    recent baseline they have reached. Must be in release order.
+    """
+
+    # v0.3.1877, released on 2024-03-11; shipped with the rustup 1.78 toolchain.
+    DEFAULT = (
+        datetime.strptime("2024-03-11", "%Y-%m-%d"),
+        (0, 3, 1877),
+        (1, 78, 0),
+    )
+    # v0.3.2727, released on 2025-12-22; v0.3.2743 is shipped with the rustup 1.94 toolchain.
+    SUPPORTS_CRATE_ATTRS = (
+        datetime.strptime("2025-12-22", "%Y-%m-%d"),
+        (0, 3, 2727),
+        (1, 94, 0),
+    )
+
+    def __init__(
+        self, release_date: date, ra_version: Version, rust_version: Version
+    ) -> None:
+        self.release_date = release_date
+        self.ra_version = ra_version
+        self.rust_version = rust_version
+
+
 class RustProject(TypedDict, total=False):
     crates: List[Crate]
     sysroot: str
@@ -61,11 +98,50 @@ class RustProject(TypedDict, total=False):
     sysroot_src: str
 
 
-@dataclass(frozen=True)
-class RaVersionCtx:
-    manual_sysroot_crates: bool
-    use_crate_attrs: bool
+def generate_rust_project(
+    version_info: RaVersionInfo,
+    srctree: pathlib.Path,
+    objtree: pathlib.Path,
+    sysroot: pathlib.Path,
+    sysroot_src: pathlib.Path,
+    external_src: Optional[pathlib.Path],
+    cfgs: List[str],
+    core_edition: str,
+) -> RustProject:
+    from typing import NoReturn
 
+    # TODO: Switch to `typing.assert_never` when Python 3.11 is adopted.
+    def assert_never(arg: NoReturn, /) -> NoReturn:
+        # Adapted from:
+        # https://github.com/python/cpython/blob/1b118353bb0a/Lib/typing.py#L2629-L2651
+        value = repr(arg)
+        raise AssertionError(f"Expected code to be unreachable, but got: {value}")
+
+    if version_info == RaVersionInfo.DEFAULT:
+        ctx = RaVersionCtx(
+            use_crate_attrs=False,
+            manual_sysroot_crates=True,
+        )
+        return {
+            "crates": generate_crates(
+                ctx, srctree, objtree, sysroot_src, external_src, cfgs, core_edition
+            ),
+            "sysroot": str(sysroot),
+        }
+    elif version_info == RaVersionInfo.SUPPORTS_CRATE_ATTRS:
+        ctx = RaVersionCtx(
+            use_crate_attrs=True,
+            manual_sysroot_crates=False,
+        )
+        return {
+            "crates": generate_crates(
+                ctx, srctree, objtree, sysroot_src, external_src, cfgs, core_edition
+            ),
+            "sysroot": str(sysroot),
+            "sysroot_src": str(sysroot_src),
+        }
+    else:
+        assert_never(version_info)
 
 def generate_crates(
     ctx: RaVersionCtx,
@@ -379,77 +455,6 @@ def generate_crates(
 
     return crates
 
-
-Version = tuple[int, int, int]
-
-
-@enum.unique
-class RaVersionInfo(enum.Enum):
-    """
-    Represents rust-analyzer compatibility baselines. Concrete versions are mapped to the most
-    recent baseline they have reached. Must be in release order.
-    """
-
-    # v0.3.1877, released on 2024-03-11; shipped with the rustup 1.78 toolchain.
-    DEFAULT = (
-        datetime.strptime("2024-03-11", "%Y-%m-%d"),
-        (0, 3, 1877),
-        (1, 78, 0),
-    )
-
-    def __init__(
-        self, release_date: date, ra_version: Version, rust_version: Version
-    ) -> None:
-        self.release_date = release_date
-        self.ra_version = ra_version
-        self.rust_version = rust_version
-
-
-def generate_rust_project(
-    version_info: RaVersionInfo,
-    srctree: pathlib.Path,
-    objtree: pathlib.Path,
-    sysroot: pathlib.Path,
-    sysroot_src: pathlib.Path,
-    external_src: Optional[pathlib.Path],
-    cfgs: List[str],
-    core_edition: str,
-) -> RustProject:
-    from typing import NoReturn
-
-    # TODO: Switch to `typing.assert_never` when Python 3.11 is adopted.
-    def assert_never(arg: NoReturn, /) -> NoReturn:
-        # Adapted from:
-        # https://github.com/python/cpython/blob/1b118353bb0a/Lib/typing.py#L2629-L2651
-        value = repr(arg)
-        raise AssertionError(f"Expected code to be unreachable, but got: {value}")
-
-    if version_info == RaVersionInfo.DEFAULT:
-        ctx = RaVersionCtx(
-            use_crate_attrs=False,
-            manual_sysroot_crates=True,
-        )
-        return {
-            "crates": generate_crates(
-                ctx, srctree, objtree, sysroot_src, external_src, cfgs, core_edition
-            ),
-            "sysroot": str(sysroot),
-        }
-    elif version_info == RaVersionInfo.SUPPORTS_CRATE_ATTRS:
-        ctx = RaVersionCtx(
-            use_crate_attrs=True,
-            manual_sysroot_crates=False,
-        )
-        return {
-            "crates": generate_crates(
-                ctx, srctree, objtree, sysroot_src, external_src, cfgs, core_edition
-            ),
-            "sysroot": str(sysroot),
-            "sysroot_src": str(sysroot_src),
-        }
-    else:
-        assert_never(version_info)
-
 def query_ra_version() -> Optional[str]:
     try:
         # Use the rust-analyzer binary found in $PATH.
@@ -474,7 +479,7 @@ def map_ra_version_baseline(ra_version_output: str) -> RaVersionInfo:
         version_string = version_match.group()
         found_version = tuple(map(int, version_string.split(".")))
 
-        # `rust-analyzer --version` shows different version string depending on how the binary
+        # `rust-analyzer --version` shows a different version string depending on how the binary
         # is built: it may print either the Rust version or the rust-analyzer version itself.
         # To distinguish between them, we leverage rust-analyzer's versioning convention.
         #
